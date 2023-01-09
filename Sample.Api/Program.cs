@@ -1,4 +1,6 @@
 using MassTransit;
+using MassTransit.Definition;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sample.Components.Consuments;
 using Sample.Contracts;
 
@@ -10,12 +12,15 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddMediator(cfg =>
+builder.Services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
+builder.Services.AddMassTransit(cfg =>
 {
-    cfg.AddConsumer<SubmitOrderConsumer>();
+    cfg.AddBus(provider => Bus.Factory.CreateUsingRabbitMq());
+
     cfg.AddRequestClient<ISubmitOrder>();
 });
 
+builder.Services.AddMassTransitHostedService();
 
 builder.Services.AddOpenApiDocument(cfg => cfg.PostProcess = d => d.Info.Title = "Sample API Site");
 
