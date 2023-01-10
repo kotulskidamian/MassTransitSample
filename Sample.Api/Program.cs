@@ -21,7 +21,7 @@ builder.Services.AddMassTransit(cfg =>
     //cfg.AddRequestClient<ISubmitOrder>();
     // jawnie zdefiniowany konsumer (nie powinno się tego robić), działa tak jak wyżej: w przypadku gdy 
     // zostanie wysłana wiadomość bez uruchomionego konsumera, gdy ten wstanie to odbierze wiadomość
-    cfg.AddRequestClient<ISubmitOrder>(new Uri($"queue:{KebabCaseEndpointNameFormatter.Instance.Consumer<SubmitOrderConsumer>()}"));
+    //cfg.AddRequestClient<ISubmitOrder>(new Uri($"queue:{KebabCaseEndpointNameFormatter.Instance.Consumer<SubmitOrderConsumer>()}"));
     //  w przypadku gdy zostanie wysłana wiadomość bez uruchomionego konsumera, gdy ten wstanie to NIE odbierze wiadomości, wysyłanie
     // wiadomości zakończy się błędem
     cfg.AddRequestClient<ISubmitOrder>(new Uri($"exchange:{KebabCaseEndpointNameFormatter.Instance.Consumer<SubmitOrderConsumer>()}"));
