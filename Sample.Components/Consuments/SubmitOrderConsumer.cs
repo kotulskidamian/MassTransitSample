@@ -17,25 +17,36 @@ namespace Sample.Components.Consuments
         {
             _logger.Log(LogLevel.Debug, $"SubmitOrderCunsumer: {context.Message.CustomerNumber}");
 
+            // Jeżeli endpoint.Send w Api to nie będzie tych właściwości, bo 
+            // wysyłający nie oczekuje odpowiedzi
+            var requestId = context.RequestId;
+            var responseAddress = context.ResponseAddress;
+
             if (context.Message.CustomerNumber.Contains("TEST"))
             {
-                await context.RespondAsync<IOrderSubmissionRejected>(new
+                if (responseAddress != null)
                 {
-                    InVar.Timestamp,
-                    context.Message.OrderId,
-                    context.Message.CustomerNumber,
-                    Reason = $"Test customer can't submit orders: {context.Message.CustomerNumber}"
-                });
+                    await context.RespondAsync<IOrderSubmissionRejected>(new
+                    {
+                        InVar.Timestamp,
+                        context.Message.OrderId,
+                        context.Message.CustomerNumber,
+                        Reason = $"Test customer can't submit orders: {context.Message.CustomerNumber}"
+                    });
+                }
 
                 return;
             }
 
-            await context.RespondAsync<IOrderSubmissionAccepted>(new
+            if (responseAddress != null)
             {
-                InVar.Timestamp,
-                context.Message.OrderId,
-                context.Message.CustomerNumber
-            });
+                await context.RespondAsync<IOrderSubmissionAccepted>(new
+                {
+                    InVar.Timestamp,
+                    context.Message.OrderId,
+                    context.Message.CustomerNumber
+                });
+            }
         }
     }
 }
