@@ -26,6 +26,7 @@ builder.Services.AddMassTransit(cfg =>
     // wiadomości zakończy się błędem
     cfg.AddRequestClient<ISubmitOrder>(new Uri($"exchange:{KebabCaseEndpointNameFormatter.Instance.Consumer<SubmitOrderConsumer>()}"));
 
+    cfg.AddRequestClient<ICheckOrder>();
 });
 
 builder.Services.AddMassTransitHostedService();

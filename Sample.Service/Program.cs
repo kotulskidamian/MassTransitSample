@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sample.Components.Consuments;
+using Sample.Components.StateMachines;
 using Sample.Service;
 using System.Diagnostics;
 
@@ -33,6 +34,8 @@ class Program
                 services.AddMassTransit(cfg =>
                 {
                     cfg.AddConsumersFromNamespaceContaining<SubmitOrderConsumer>();
+
+                    cfg.AddSagaStateMachine<OrderStateMachine, OrderState>().RedisRepository();
 
                     cfg.UsingRabbitMq(ConfigureBus);
                 });

@@ -38,6 +38,13 @@ namespace Sample.Components.Consuments
                 return;
             }
 
+            await context.Publish<IOrderSubmitted>(new
+            {
+                context.Message.OrderId,
+                context.Message.Timestamp,
+                context.Message.CustomerNumber,
+            });
+
             if (responseAddress != null)
             {
                 await context.RespondAsync<IOrderSubmissionAccepted>(new
